@@ -17,8 +17,8 @@ import Md4 from "./algo/md4";
 		}
 		this.setAttribute(name, value);
 	};
-	window[`setAttributeDynamic`].name = packageName;
-	window[`setAttributeDynamic`].version = packageVersion;
+	window[`setAttributeDynamic`].packageName = packageName;
+	window[`setAttributeDynamic`].packageVersion = packageVersion;
 
 	function getIdentFunc(pattern) {
 		const [patternMatch, algo, digest, length] = /\[(.+):hash:(.+):(\d+)\]/i.exec(pattern);

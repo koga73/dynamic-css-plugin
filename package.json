@@ -30,6 +30,6 @@
 	},
 	"peerDependencies": {
 		"react-dom": "*",
-		"mini-css-extract-plugin": "*"
+		"css-loader": "*"
 	}
 }

@@ -10,13 +10,13 @@ const SCRIPT_INJECT = SCRIPT_INJECT_SRC.replace(/\.js$/, "_generated.js");
 class _class {
 	static DEFAULT_OPTIONS = {
 		enabled: true,
+		entryName: undefined,
 		localIdentName: "[md4:hash:base64:5]",
 		attributes: /^(id|class)$/,
 		exclusionTags: /(path)/i,
 		exclusionValues: /^(css|sc|icon)-/i,
-		entryName: undefined,
 
-		scriptInject: {
+		inject: {
 			src: SCRIPT_INJECT_SRC,
 			out: SCRIPT_INJECT
 		}
@@ -39,21 +39,28 @@ class _class {
 		if (options.enabled !== true) {
 			return;
 		}
-		compiler.hooks.beforeRun.tap(_this.plugin, (compiler) => {
-			const miniCssExtractPlugin = compiler.options.plugins.find((plugin) => plugin.constructor.name === "MiniCssExtractPlugin");
-			if (!miniCssExtractPlugin) {
-				throw new Error("MiniCssExtractPlugin not found");
-			}
 
-			//Inject options into MiniCssExtractPlugin
-			const modules = miniCssExtractPlugin.options.modules || {};
-			modules.localIdentName = options.localIdentName;
-			modules.getLocalIdent = getLocalIdent(options);
-			miniCssExtractPlugin.options.modules = modules;
-			//console.log(miniCssExtractPlugin);
+		compiler.hooks.afterEnvironment.tap(_this.plugin.name, () => {
+			const rules = compiler.options.module.rules;
+
+			//Inject options into css-loader
+			const cssRule = rules.find((rule) => rule.test.test(".css"));
+			if (!cssRule) {
+				throw new Error(".css rule not found");
+			}
+			const cssLoader = cssRule.use.find((loader) => loader.loader === "css-loader");
+			if (!cssLoader) {
+				throw new Error("css-loader not found");
+			}
+			const cssLoaderOptions = cssLoader.options || {};
+			const cssLoaderOptionsModules = cssLoaderOptions.modules || {};
+			cssLoaderOptionsModules.localIdentName = options.localIdentName;
+			cssLoaderOptionsModules.getLocalIdent = getLocalIdent(options);
+			cssLoaderOptions.modules = cssLoaderOptionsModules;
+			cssLoader.options = cssLoaderOptions;
+			//console.log(rules);
 
 			//Inject string-replace-loader to hook into react-dom setAttribute
-			const rules = compiler.options.module.rules || {};
 			rules.unshift({
 				//react-dom.development.js
 				//react-dom.production.min.js
@@ -64,7 +71,6 @@ class _class {
 					replace: "window['setAttributeDynamic'].call($1,"
 				}
 			});
-			compiler.options.module.rules = rules;
 			//console.log(rules);
 
 			//Inject the setAttributeDynamic function into the bundle
@@ -80,7 +86,7 @@ class _class {
 				entryBundleImport = [entryBundleImport];
 			}
 			_this._generateInjectScript(options);
-			entryBundleImport.unshift(options.scriptInject.out);
+			entryBundleImport.unshift(options.inject.out);
 			if (hasImport) {
 				entryBundle.import = entryBundleImport;
 			} else {
@@ -94,7 +100,7 @@ class _class {
 
 	_generateInjectScript(options) {
 		const _this = this;
-		const {src, out} = options.scriptInject;
+		const {src, out} = options.inject;
 		const data = fs.readFileSync(src, "utf8");
 		const tokens = _this._computeTokens(options);
 		const output = _this._replaceTokens(data, tokens);
