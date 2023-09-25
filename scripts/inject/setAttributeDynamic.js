@@ -1,8 +1,8 @@
-//This code gets injected into the bundle
+//This code gets injected into the bundle by __PACKAGE_NAME__
 
 import Md4 from "./algo/md4";
 
-export default ({packageJson, localIdentName, attributes, exclusionTags, exclusionValues}) => {
+(function ({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues}) {
 	const IDENT_FUNC = getIdentFunc(localIdentName);
 
 	//Invoke with window[`setAttributeDynamic`].call(node, name, value)
@@ -17,8 +17,8 @@ export default ({packageJson, localIdentName, attributes, exclusionTags, exclusi
 		}
 		this.setAttribute(name, value);
 	};
-	window[`setAttributeDynamic`].name = packageJson.name;
-	window[`setAttributeDynamic`].version = packageJson.version;
+	window[`setAttributeDynamic`].name = packageName;
+	window[`setAttributeDynamic`].version = packageVersion;
 
 	function getIdentFunc(pattern) {
 		const [patternMatch, algo, digest, length] = /\[(.+):hash:(.+):(\d+)\]/i.exec(pattern);
@@ -45,4 +45,14 @@ export default ({packageJson, localIdentName, attributes, exclusionTags, exclusi
 		}
 		return (input) => input;
 	}
-};
+})(
+	//These values get replaced when the plugin runs
+	{
+		packageName: "__PACKAGE_NAME__",
+		packageVersion: "__PACKAGE_VERSION__",
+		localIdentName: "__LOCAL_IDENT_NAME__",
+		attributes: "__ATTRIBUTES__",
+		exclusionTags: "__EXCLUSION_TAGS__",
+		exclusionValues: "__EXCLUSION_VALUES__"
+	}
+);
