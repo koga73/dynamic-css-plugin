@@ -2,6 +2,40 @@
 
 Webpack plugin to transform dynamic react class names to short prefixed and obfuscated classes at runtime
 
+### Example:
+
+Format to add a prefix and obfuscate the class names:
+
+```js
+"pf_[md4:hash:base64:5]";
+```
+
+The dynamic nature means that runtime generated classes get transformed
+
+Input:
+
+```jsx
+<MyComponent className={["my-component", `is-disabled_${disabled}`].join()} />
+```
+
+Evaluated:
+
+```jsx
+<MyComponent className={"my-component is-disabled_true"} />
+```
+
+Output:
+
+```html
+<div class="px_Xscyf pf_LfRuA"></div>
+```
+
+```css
+.px_Xscyf.pf_LfRuA {
+	//Styles
+}
+```
+
 ## Installation
 
 ```bash
