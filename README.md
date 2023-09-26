@@ -90,7 +90,7 @@ module.exports = {
 			enabled: true,
 			entryName: "main",
 			localIdentName: "myPrefix_[md4:hash:base64:5]",
-			attributes: /^(id|class)$/,
+			attributes: /^(class)$/,
 			exclusionTags: /(path)/i,
 			exclusionValues: /^(css|sc|icon)-/i
 		})
@@ -103,7 +103,7 @@ module.exports = {
 -   **enabled** | Boolean | Default: true | If false, the plugin will not run
 -   **entryName** | String | Default: undefined | The name of the entry point to inject the plugin. If _undefined_ will default to the first entry
 -   **localIdentName** | String | Default: "[md4:hash:base64:5]" | The format of the generated class names as [(algorithm):hash:(digest):(length)]
--   **attributes** | RegExp | Default: /^(id|class)$/ | Regex for HTML attribute names to transform their value
+-   **attributes** | RegExp | Default: /^(class)$/ | Regex for HTML attribute names to transform their value
 -   **exclusionTags** | RegExp | Default: /(path)/i | Regex for HTML tag names to exclude from transformations
 -   **exclusionValues** | RegExp | Default: /^(css|sc|icon)-/i | Regex for HTML attribute values to exclude from transformations
 

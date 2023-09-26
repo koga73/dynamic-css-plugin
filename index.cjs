@@ -12,7 +12,7 @@ class _class {
 		enabled: true,
 		entryName: undefined,
 		localIdentName: "[md4:hash:base64:5]",
-		attributes: /^(id|class)$/,
+		attributes: /^(class)$/,
 		exclusionTags: /(path)/i,
 		exclusionValues: /^(css|sc|icon)-/i,
 
