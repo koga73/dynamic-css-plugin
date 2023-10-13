@@ -37,7 +37,7 @@
 		"string-replace-loader": "3.1.0"
 	},
 	"peerDependencies": {
-		"css-loader": "*",
+		"@koga73/css-loader": "*",
 		"react-dom": "*",
 		"webpack": "*"
 	}

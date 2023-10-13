@@ -118,3 +118,10 @@ Note: The **exclusionValues** default excludes class names with the following pr
 1. The plugin sets **localIdentName** and **getLocalIdent** in the _css-loader_ options
 2. The plugin replaces **setAttribute** in _react-dom_ with a custom function that transforms the class names at runtime
 3. The plugin injects the custom **setAttributeDynamic** function into the entry point of the bundle
+
+## Dependencies
+
+-   For now, this plugin uses a forked version of _css-loader_ to allow for an update to the **getLocalIdent** function to determine whether the attribute is a class or id. The reason being that we often want to only transform class names and not ids. This is because ids are used for anchors, aria, automated tests, analytics, vanilla js, etc. This means that until other PRs are merged, you should utilize _@koga73/css-loader_.
+
+-   [postcss-modules-scope PR](https://github.com/css-modules/postcss-modules-scope/pull/55)
+-   [css-loader Issue](https://github.com/webpack-contrib/css-loader/issues/1540)
