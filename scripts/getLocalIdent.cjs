@@ -1,6 +1,9 @@
-module.exports = ({exclusionValues}) => {
+module.exports = ({attributes, exclusionValues}) => {
 	//Modified from original at: https://github.com/webpack-contrib/css-loader/blob/master/src/utils.js
 	return function getLocalIdent(loaderContext, localIdentName, localName, options) {
+		if (options.node && !attributes.test(options.node.type)) {
+			return localName;
+		}
 		if (exclusionValues.test(localName)) {
 			return localName;
 		}

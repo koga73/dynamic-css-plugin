@@ -12,7 +12,7 @@ class _class {
 		enabled: true,
 		entryName: undefined,
 		localIdentName: "[md4:hash:base64:5]",
-		attributes: /^(id|class)$/,
+		attributes: /^(class)$/,
 		exclusionTags: /(path)/i,
 		exclusionValues: /^(css|sc|icon)-/i,
 
@@ -48,7 +48,7 @@ class _class {
 			if (!cssRule) {
 				throw new Error(".css rule not found");
 			}
-			const cssLoader = cssRule.use.find((loader) => loader.loader === "css-loader");
+			const cssLoader = cssRule.use.find((loader) => loader.loader === "@koga73/css-loader");
 			if (!cssLoader) {
 				throw new Error("css-loader not found");
 			}
