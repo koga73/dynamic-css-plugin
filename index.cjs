@@ -48,7 +48,7 @@ class _class {
 			if (!cssRule) {
 				throw new Error(".css rule not found");
 			}
-			const cssLoader = cssRule.use.find((loader) => loader.loader === "@koga73/css-loader");
+			const cssLoader = cssRule.use.find((loader) => loader.loader === "css-loader");
 			if (!cssLoader) {
 				throw new Error("css-loader not found");
 			}
