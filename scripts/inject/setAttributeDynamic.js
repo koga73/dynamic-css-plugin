@@ -2,11 +2,11 @@
 
 import Md4 from "./algo/md4";
 
-(function ({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues}) {
+(function ({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues, scope}) {
 	const IDENT_FUNC = getIdentFunc(localIdentName);
 
 	//Invoke with window[`setAttributeDynamic`].call(node, name, value)
-	window[`setAttributeDynamic`] = function (name, value) {
+	window[`${scope}setAttributeDynamic`] = function (name, value) {
 		if (attributes.test(name) && value) {
 			if (!exclusionTags.test(this.tagName)) {
 				value = value
@@ -17,8 +17,8 @@ import Md4 from "./algo/md4";
 		}
 		this.setAttribute(name, value);
 	};
-	window[`setAttributeDynamic`].packageName = packageName;
-	window[`setAttributeDynamic`].packageVersion = packageVersion;
+	window[`${scope}setAttributeDynamic`].packageName = packageName;
+	window[`${scope}setAttributeDynamic`].packageVersion = packageVersion;
 
 	function getIdentFunc(pattern) {
 		const [patternMatch, algo, digest, length] = /\[(.+):hash:(.+):(\d+)\]/i.exec(pattern);
@@ -53,6 +53,7 @@ import Md4 from "./algo/md4";
 		localIdentName: "__LOCAL_IDENT_NAME__",
 		attributes: "__ATTRIBUTES__",
 		exclusionTags: "__EXCLUSION_TAGS__",
-		exclusionValues: "__EXCLUSION_VALUES__"
+		exclusionValues: "__EXCLUSION_VALUES__",
+		scope: "__SCOPE__"
 	}
 );

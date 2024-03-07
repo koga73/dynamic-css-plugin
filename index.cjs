@@ -15,6 +15,7 @@ class _class {
 		attributes: /^(class)$/,
 		exclusionTags: /(path)/i,
 		exclusionValues: /^(css|sc|icon)-/i,
+		scope: "",
 
 		inject: {
 			src: SCRIPT_INJECT_SRC,
@@ -68,7 +69,7 @@ class _class {
 				loader: "string-replace-loader",
 				options: {
 					search: /(\w+)\.setAttribute\(/g,
-					replace: "window['setAttributeDynamic'].call($1,"
+					replace: `window['${options.scope}setAttributeDynamic'].call($1,`
 				}
 			});
 			//console.log(rules);
@@ -114,7 +115,8 @@ class _class {
 			__LOCAL_IDENT_NAME__: options.localIdentName,
 			__ATTRIBUTES__: options.attributes,
 			__EXCLUSION_TAGS__: options.exclusionTags,
-			__EXCLUSION_VALUES__: options.exclusionValues
+			__EXCLUSION_VALUES__: options.exclusionValues,
+			__SCOPE__: options.scope
 		};
 	}
 
