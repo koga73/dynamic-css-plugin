@@ -1,24 +1,40 @@
-//This code gets injected into the bundle by __PACKAGE_NAME__
-
 import Md4 from "./algo/md4";
 
-(function ({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues, scope}) {
+const METHOD_NAME = "setAttributeDynamic";
+
+const cacheStore = {};
+
+export default function setDynamicAttribute({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues, scope}) {
 	const IDENT_FUNC = getIdentFunc(localIdentName);
 
 	//Invoke with window[`setAttributeDynamic`].call(node, name, value)
-	window[`${scope}setAttributeDynamic`] = function (name, value) {
+	globalThis[`${scope}${METHOD_NAME}`] = function (name, value) {
 		if (attributes.test(name) && value) {
 			if (!exclusionTags.test(this.tagName)) {
+				// Process value
 				value = value
 					.split(" ")
-					.map((attrVal) => (exclusionValues.test(attrVal) ? attrVal : IDENT_FUNC(attrVal)))
+					.map((attrVal) => processVal(attrVal))
 					.join(" ");
 			}
 		}
-		this.setAttribute(name, value);
+		return this.setAttribute(name, value);
 	};
-	window[`${scope}setAttributeDynamic`].packageName = packageName;
-	window[`${scope}setAttributeDynamic`].packageVersion = packageVersion;
+	globalThis[`${scope}${METHOD_NAME}`].packageName = packageName;
+	globalThis[`${scope}${METHOD_NAME}`].packageVersion = packageVersion;
+
+	// Check exclusion and cache values
+	function processVal(val) {
+		if (exclusionValues.test(val)) {
+			return val;
+		}
+		if (val in cacheStore) {
+			return cacheStore[val];
+		}
+		const newVal = IDENT_FUNC(val);
+		cacheStore[val] = newVal;
+		return newVal;
+	}
 
 	function getIdentFunc(pattern) {
 		const [patternMatch, algo, digest, length] = /\[(.+):hash:(.+):(\d+)\]/i.exec(pattern);
@@ -45,15 +61,4 @@ import Md4 from "./algo/md4";
 		}
 		return (input) => input;
 	}
-})(
-	//These values get replaced when the plugin runs
-	{
-		packageName: "__PACKAGE_NAME__",
-		packageVersion: "__PACKAGE_VERSION__",
-		localIdentName: "__LOCAL_IDENT_NAME__",
-		attributes: "__ATTRIBUTES__",
-		exclusionTags: "__EXCLUSION_TAGS__",
-		exclusionValues: "__EXCLUSION_VALUES__",
-		scope: "__SCOPE__"
-	}
-);
+}
