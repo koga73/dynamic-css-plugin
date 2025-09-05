@@ -1,4 +1,4 @@
-module.exports = ({attributes, exclusionValues}) => {
+function getLocalIdent({attributes, exclusionValues}) {
 	//Modified from original at: https://github.com/webpack-contrib/css-loader/blob/master/src/utils.js
 	return function getLocalIdent(loaderContext, localIdentName, localName, options) {
 		if (options.node && !attributes.test(options.node.type)) {
@@ -45,4 +45,5 @@ module.exports = ({attributes, exclusionValues}) => {
 
 		return localIdentName.replace(/\[contenthash\]/, hashStr);
 	};
-};
+}
+export default getLocalIdent;

@@ -1,6 +1,6 @@
 //This code gets injected into the bundle by __PACKAGE_NAME__
 
-import setDynamicAttribute from "./setAttributeDynamic";
+import setDynamicAttribute from "./setAttributeDynamic.js";
 
 setDynamicAttribute(
 	//These values get replaced when the plugin runs

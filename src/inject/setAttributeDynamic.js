@@ -1,10 +1,10 @@
-import Md4 from "./algo/md4";
+import Md4 from "./algo/md4.js";
 
 const METHOD_NAME = "setAttributeDynamic";
 
 const cacheStore = {};
 
-export default function setDynamicAttribute({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues, scope}) {
+function setDynamicAttribute({packageName, packageVersion, localIdentName, attributes, exclusionTags, exclusionValues, scope}) {
 	const IDENT_FUNC = getIdentFunc(localIdentName);
 
 	//Invoke with window[`setAttributeDynamic`].call(node, name, value)
@@ -62,3 +62,5 @@ export default function setDynamicAttribute({packageName, packageVersion, localI
 		return (input) => input;
 	}
 }
+
+export default setDynamicAttribute;
