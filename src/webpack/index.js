@@ -1,22 +1,19 @@
 import {promises as fs} from "fs";
 
-import Constants from "../constants.js";
-import Common from "../common.js";
-import Patch from "../patch/setAttribute.js";
+import Options from "../options.js";
+import Tokenize from "../tokenize.js";
 import getLocalIdent from "./getLocalIdent.js";
 
 import packageJson from "../../package.json" with {type: "json"};
-const {name: packageName, version: packageVersion} = packageJson;
+const {name: packageName, version: packageVersion} =packageJson;
 
-class ReactDynamicCssWebpackPlugin {
-	constructor(options) {
+class DynamicCssWebpackPlugin {
+	constructor(opts) {
+		this.options = new Options(opts);
+
 		this.plugin = {
 			name: packageName,
 			version: packageVersion
-		};
-		this.options = {
-			...Constants.DEFAULT_OPTIONS,
-			...options
 		};
 		this._hasGenerated = false;
 
@@ -40,10 +37,11 @@ class ReactDynamicCssWebpackPlugin {
 		console.info(`[${packageName}] Configuring webpack...`);
 
 		const {options} = this;
+		const {patch: createPatch, inject, transform} = options;
 
 		const rules = compiler.options.module.rules;
 
-		//Inject options into css-loader
+		//Add options into css-loader
 		const cssRule = rules.find((rule) => rule.test.test(".css"));
 		if (!cssRule) {
 			throw new Error(".css rule not found");
@@ -54,23 +52,25 @@ class ReactDynamicCssWebpackPlugin {
 		}
 		const cssLoaderOptions = cssLoader.options || {};
 		const cssLoaderOptionsModules = cssLoaderOptions.modules || {};
-		cssLoaderOptionsModules.localIdentName = options.localIdentName;
-		cssLoaderOptionsModules.getLocalIdent = getLocalIdent(options);
+		cssLoaderOptionsModules.localIdentName = transform.template;
+		cssLoaderOptionsModules.getLocalIdent = getLocalIdent(transform);
 		cssLoaderOptions.modules = cssLoaderOptionsModules;
 		cssLoader.options = cssLoaderOptions;
 
-		//Inject string-replace-loader to hook into react-dom setAttribute
+		//Add string-replace-loader to apply the patch
+		const patch = createPatch(options.scope);
 		rules.unshift({
-			//react-dom.development.js
-			//react-dom.production.min.js
-			test: /react-dom\..+\.js$/,
 			loader: "string-replace-loader",
-			options: Patch(options.scope)
+			test: patch.test,
+			options: {
+				search: patch.search,
+				replace: patch.replace
+			}
 		});
 
 		//Inject into the bundle
 		const entry = compiler.options.entry;
-		const entryName = options.entryName || Object.keys(entry)[0];
+		const entryName = options.entryPoint || Object.keys(entry)[0];
 		const entryChunk = entry[entryName];
 		if (!entryChunk) {
 			throw new Error("Entry chunk not found");
@@ -81,7 +81,7 @@ class ReactDynamicCssWebpackPlugin {
 			entryChunkImport = [entryChunkImport];
 		}
 
-		entryChunkImport.unshift(options._inject.out);
+		entryChunkImport.unshift(inject.file);
 		if (hasImport) {
 			entryChunk.import = entryChunkImport;
 		} else {
@@ -99,14 +99,15 @@ class ReactDynamicCssWebpackPlugin {
 		console.info(`[${packageName}] Generating inject script...`);
 
 		const {options} = this;
-		const {_inject, ...opts} = options;
+		const {inject, transform, scope} = options;
 
-		const input = await fs.readFile(_inject.src, Constants.ENCODING);
-		const tokens = Common.computeTokens({packageName, packageVersion}, opts);
-		const output = Common.replaceTokens(input, tokens);
+		const input = await fs.readFile(inject.src, Options.ENCODING);
+		const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
+		const output = Tokenize.replace(input, tokens);
 
-		await fs.writeFile(_inject.out, output, Constants.ENCODING);
+		await fs.writeFile(inject.file, output, Options.ENCODING);
 	}
 }
 
-export default ReactDynamicCssWebpackPlugin;
+export {Options};
+export default DynamicCssWebpackPlugin;

@@ -66,8 +66,7 @@ export default function webpackConfig(env, argv) {
 				template: path.join(__dirname, INPUT_DIR, "index.html")
 			}),
 			new ReactDynamicCssPlugin({
-				enabled: true,
-				localIdentName: "app_[md4:hash:base64:5]"
+				transform: "app_[md4:hash:base64:5]"
 			})
 		]
 	};

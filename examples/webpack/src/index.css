@@ -40,6 +40,9 @@ body {
 		line-height: 1.5em;
 	}
 }
+#inspect .txt {
+	color: charcoal;
+}
 
 .btn {
 	margin: 16px 0;

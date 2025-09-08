@@ -1,17 +1,14 @@
-import ReactDynamicCssRollupPlugin from "./rollup.js";
-import ReactDynamicCssPostcssPlugin from "./postcss.js";
-import ReactDynamicCssEsbuildPlugin from "./esbuild.js";
+import DynamicCssRollupPlugin from "./rollup.js";
+import DynamicCssPostcssPlugin from "./postcss.js";
+import DynamicCssEsbuildPlugin from "./esbuild.js";
 
-import Constants from "../constants.js";
+import Options from "../options.js";
 
 import packageJson from "../../package.json" with {type: "json"};
 const {name: packageName, version: packageVersion} = packageJson;
 
-function ReactDynamicCssVitePlugin(options = {}) {
-	options = {
-		...Constants.DEFAULT_OPTIONS,
-		...options
-	};
+function DynamicCssVitePlugin(opts = {}) {
+	const options = new Options(opts);
 
 	const plugin = {
 		name: packageName,
@@ -21,7 +18,7 @@ function ReactDynamicCssVitePlugin(options = {}) {
 		? plugin
 		: {
 				// Vite is built on Rollup
-				...ReactDynamicCssRollupPlugin.call(this, options),
+				...DynamicCssRollupPlugin.call(this, options),
 				...plugin,
 
 				//Add postcss and esbuild plugins
@@ -30,16 +27,17 @@ function ReactDynamicCssVitePlugin(options = {}) {
 					config.css ||= {};
 					config.css.postcss ||= {};
 					config.css.postcss.plugins ||= [];
-					config.css.postcss.plugins.push(ReactDynamicCssPostcssPlugin(options));
+					config.css.postcss.plugins.push(DynamicCssPostcssPlugin(options));
 
 					//Add esbuild plugin
 					/*
 					config.esbuild ||= {};
 					config.esbuild.plugins ||= [];
-					config.esbuild.plugins.push(ReactDynamicCssEsbuildPlugin(options));
+					config.esbuild.plugins.push(DynamicCssEsbuildPlugin(options));
 					*/
 				}
 		  };
 }
 
-export default ReactDynamicCssVitePlugin;
+export {Options};
+export default DynamicCssVitePlugin;

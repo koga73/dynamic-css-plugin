@@ -1,8 +1,12 @@
-// A PostCSS plugin that applies the localIdentName to class selectors
+// A PostCSS plugin that applies the transform to class selectors
 
-function ReactDynamicCssPostcssPlugin(options = {}) {
+import Tokenize from "../tokenize.js";
+
+function DynamicCssPostcssPlugin(options) {
+	const transformFunc = Tokenize.getTransformFunc(options.transform.template);
+
 	return {
-		postcssPlugin: "ReactDynamicCssPostcssPlugin",
+		postcssPlugin: "DynamicCssPostcssPlugin",
 		Rule(rule) {
 			const {selector} = rule;
 
@@ -10,13 +14,13 @@ function ReactDynamicCssPostcssPlugin(options = {}) {
 			const matches = selector.match(/\.[\w-]+/gi);
 			if (matches) {
 				matches.forEach((match) => {
-					//TODO: ACTUAL CODE TO GENERATE CSS CLASS NAMES!
-					rule.selector = rule.selector.replace(match, `${match}${options.postfix}`);
+					const className = match.slice(1); // Remove the dot
+					rule.selector = rule.selector.replace(match, `.${transformFunc(className)}`);
 				});
 			}
 		}
 	};
 }
-ReactDynamicCssPostcssPlugin.postcss = true;
+DynamicCssPostcssPlugin.postcss = true;
 
-export default ReactDynamicCssPostcssPlugin;
+export default DynamicCssPostcssPlugin;

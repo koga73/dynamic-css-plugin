@@ -4,9 +4,8 @@ import {fileURLToPath} from "url";
 
 import MagicString from "magic-string";
 
-import Constants from "../constants.js";
-import Common from "../common.js";
-import Patch from "../patch/setAttribute.js";
+import Options from "../options.js";
+import Tokenize from "../tokenize.js";
 
 import packageJson from "../../package.json" with {type: "json"};
 const {name: packageName, version: packageVersion} = packageJson;
@@ -29,11 +28,9 @@ const VIRTUAL = {
 	}
 };
 
-function ReactDynamicCssRollupPlugin(options = null) {
-	options = {
-		...Constants.DEFAULT_OPTIONS,
-		...options
-	};
+function DynamicCssRollupPlugin(options) {
+	const createPatch = options.patch;
+	const patch = createPatch(options.scope);
 
 	let entryId = null;
 
@@ -50,25 +47,24 @@ function ReactDynamicCssRollupPlugin(options = null) {
 				async buildStart() {
 					console.info(`[${packageName}] Generating inject script...`);
 
-					const {_inject, ...opts} = options;
+					const {inject, transform, scope} = options;
 
-					const input = await fs.readFile(_inject.src, Constants.ENCODING);
-					const tokens = Common.computeTokens({packageName, packageVersion}, opts);
-					const output = Common.replaceTokens(input, tokens);
+					const input = await fs.readFile(inject.src, Options.ENCODING);
+					const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
+					const output = Tokenize.replace(input, tokens);
 
-					await fs.writeFile(_inject.out, output, Constants.ENCODING);
+					await fs.writeFile(inject.file, output, Options.ENCODING);
 				},
 
 				// Transform code AFTER pre-bundle
 				// NOTE: pre-bundle chunks will not get transformed
 				transform(code, id) {
 					switch (true) {
-						//Hook into react-dom setAttribute
-						case /react-dom/.test(id): {
+						//Apply the patch
+						case patch.test.test(id): {
 							console.info(`[${packageName}] Patching '${id}'...`);
 
 							const s = new MagicString(code);
-							const patch = Patch(options.scope);
 							s.replace(patch.search, patch.replace);
 
 							return {
@@ -78,12 +74,12 @@ function ReactDynamicCssRollupPlugin(options = null) {
 						}
 
 						// Inject into the entry
-						case !entryId && options.entryName && id === options.entryName:
+						case !entryId && options.entryPoint && id === options.entryPoint:
 						// Find the first module that isn't in node_modules and treat it as the entry
 						// https://regex101.com/r/4Jmcli/2
-						case !entryId && !options.entryName && /^(?!.*(node_modules|vite)).+(js|jsx|cjs|mjs)$/.test(id): {
+						case !entryId && !options.entryPoint && /^(?!.*(node_modules|vite)).+(js|jsx|cjs|mjs)$/.test(id): {
 							entryId = id;
-							
+
 							console.info(`[${packageName}] Injecting into entry: '${id}'...`);
 
 							const s = new MagicString(code);
@@ -102,7 +98,7 @@ function ReactDynamicCssRollupPlugin(options = null) {
 				// Ensure if our transformed code is modified that we re-transform it
 				shouldTransformCachedModule(id) {
 					switch (true) {
-						case /react-dom/.test(id):
+						case patch.test.test(id):
 						case entryId && id === entryId:
 							return true;
 					}
@@ -122,21 +118,21 @@ function ReactDynamicCssRollupPlugin(options = null) {
 
 				// Load virtual modules
 				async load(id) {
-					const {_inject} = options;
+					const {inject} = options;
 
 					switch (id) {
 						case VIRTUAL.PACKAGE:
 							// prettier-ignore
-							return (await fs.readFile(_inject.out, Constants.ENCODING))
-								.replace(VIRTUAL.SET_ATTRIBUTE_DYNAMIC.replace, VIRTUAL.SET_ATTRIBUTE_DYNAMIC.name);
+							return (await fs.readFile(inject.file, Options.ENCODING))
+								.replace(VIRTUAL.SET_ATTRIBUTE_DYNAMIC.replace, VIRTUAL.SET_ATTRIBUTE_DYNAMIC.name)
+								.replace(VIRTUAL.MD4.replace, VIRTUAL.MD4.name);
 
 						case VIRTUAL.SET_ATTRIBUTE_DYNAMIC.name:
 							// prettier-ignore
-							return (await fs.readFile(VIRTUAL.SET_ATTRIBUTE_DYNAMIC.src, Constants.ENCODING))
-								.replace(VIRTUAL.MD4.replace, VIRTUAL.MD4.name);
+							return (await fs.readFile(VIRTUAL.SET_ATTRIBUTE_DYNAMIC.src, Options.ENCODING));
 
 						case VIRTUAL.MD4.name:
-							return await fs.readFile(VIRTUAL.MD4.src, Constants.ENCODING);
+							return await fs.readFile(VIRTUAL.MD4.src, Options.ENCODING);
 					}
 
 					return null;
@@ -144,4 +140,5 @@ function ReactDynamicCssRollupPlugin(options = null) {
 		  };
 }
 
-export default ReactDynamicCssRollupPlugin;
+export {Options};
+export default DynamicCssRollupPlugin;

@@ -1,7 +1,7 @@
-// An Esbuild plugin that hooks into react-dom and modifies calls to setAttribute
+// An Esbuild plugin that applies the patch
 
-function ReactDynamicCssEsbuildPlugin(options = {}) {
+function DynamicCssEsbuildPlugin(options) {
 	// TODO
 }
 
-export default ReactDynamicCssEsbuildPlugin;
+export default DynamicCssEsbuildPlugin;

@@ -4,14 +4,14 @@
 	"description": "Webpack plugin to transform dynamic react class names to short prefixed and obfuscated classes at runtime",
 	"type": "module",
 	"exports": {
-		".": {
-			"import": "./_generated/index_generated.js"
-		},
 		"./vite": {
 			"import": "./src/vite/index.js"
 		},
 		"./webpack": {
 			"import": "./src/webpack/index.js"
+		},
+		"./patch/react-dom": {
+			"import": "./src/patch/react-dom.js"
 		}
 	},
 	"scripts": {
@@ -36,14 +36,6 @@
 		"dynamic",
 		"runtime"
 	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/koga73/react-dynamic-css-plugin.git"
-	},
-	"bugs": {
-		"url": "https://github.com/koga73/react-dynamic-css-plugin/issues"
-	},
-	"homepage": "https://github.com/koga73/react-dynamic-css-plugin#readme",
 	"author": {
 		"name": "AJ Savino"
 	},
@@ -53,6 +45,20 @@
 		"string-replace-loader": "3.1.0"
 	},
 	"peerDependencies": {
-		"react-dom": "*"
+		"css-loader": ">=6.9.0",
+		"react-dom": "*",
+		"webpack": "*",
+		"vite": "*"
+	},
+	"peerDependenciesMeta": {
+		"css-loader": {
+			"optional": true
+		},
+		"webpack": {
+			"optional": true
+		},
+		"vite": {
+			"optional": true
+		}
 	}
 }
