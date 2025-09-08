@@ -1,9 +1,8 @@
+import getTransformFunc from "../transform/index.js";
+
 // A PostCSS plugin that applies the transform to class selectors
-
-import Tokenize from "../tokenize.js";
-
 function DynamicCssPostcssPlugin(options) {
-	const transformFunc = Tokenize.getTransformFunc(options.transform.template);
+	const transformFunc = getTransformFunc(options.transform.template);
 
 	return {
 		postcssPlugin: "DynamicCssPostcssPlugin",

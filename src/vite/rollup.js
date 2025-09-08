@@ -59,6 +59,7 @@ function DynamicCssRollupPlugin(options) {
 				// Transform code AFTER pre-bundle
 				// NOTE: pre-bundle chunks will not get transformed
 				transform(code, id) {
+					console.log(id);
 					switch (true) {
 						//Apply the patch
 						case patch.test.test(id): {
@@ -77,7 +78,7 @@ function DynamicCssRollupPlugin(options) {
 						case !entryId && options.entryPoint && id === options.entryPoint:
 						// Find the first module that isn't in node_modules and treat it as the entry
 						// https://regex101.com/r/4Jmcli/2
-						case !entryId && !options.entryPoint && /^(?!.*(node_modules|vite)).+(js|jsx|cjs|mjs)$/.test(id): {
+						case !entryId && !options.entryPoint && /^(?!.*(node_modules)).+(js|jsx|cjs|mjs)$/.test(id): {
 							entryId = id;
 
 							console.info(`[${packageName}] Injecting into entry: '${id}'...`);

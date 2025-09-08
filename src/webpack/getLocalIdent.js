@@ -1,4 +1,4 @@
-import Tokenize from "../tokenize.js";
+import getTransformFunc from "../transform/index.js";
 
 function getLocalIdent({attributes, ignoreValues}) {
 	return function getLocalIdent(loaderContext, localIdentName, localName, options) {
@@ -9,7 +9,7 @@ function getLocalIdent({attributes, ignoreValues}) {
 			return localName;
 		}
 
-		return Tokenize.getTransformFunc(localIdentName)(localName);
+		return getTransformFunc(localIdentName)(localName);
 	};
 }
 export default getLocalIdent;
