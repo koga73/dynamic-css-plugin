@@ -18,7 +18,9 @@ function DynamicCssEsbuildPlugin(options) {
 					filter: patch.test
 				},
 				async (args) => {
-					console.info(`[${packageName}] Patching '${args.path}'...`);
+					if (options.debug){
+						console.info(`[${packageName}] Patching '${args.path}'...`);
+					}
 
 					const source = await fs.readFile(args.path, Options.ENCODING);
 

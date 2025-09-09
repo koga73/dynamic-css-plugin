@@ -6,8 +6,6 @@ import dynamicCssPlugin from "dynamic-css-plugin/vite";
 export default defineConfig(function viteConfig() {
 	return {
 		server: {
-			port: 8080,
-			strictPort: true,
 			open: true
 		},
 		build: {
@@ -18,7 +16,7 @@ export default defineConfig(function viteConfig() {
 			react(),
 			dynamicCssPlugin({
 				enabled: true,
-				localIdentName: "app_[md4:hash:base64:5]"
+				transform: "app_[md4:hash:base64:5]"
 			})
 		]
 	};

@@ -12,6 +12,7 @@ class Options {
 	static DEFAULT = {
 		enabled: true,
 		scope: "",
+		debug: false,
 		transform: {
 			template: "[md4:hash:base64:5]",
 			attributes: /^(class)$/,

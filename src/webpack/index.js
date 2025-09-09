@@ -5,7 +5,7 @@ import Tokenize from "../tokenize.js";
 import getLocalIdent from "./getLocalIdent.js";
 
 import packageJson from "../../package.json" with {type: "json"};
-const {name: packageName, version: packageVersion} =packageJson;
+const {name: packageName, version: packageVersion} = packageJson;
 
 class DynamicCssWebpackPlugin {
 	constructor(opts) {
@@ -34,10 +34,11 @@ class DynamicCssWebpackPlugin {
 	}
 
 	_afterEnvironment(compiler) {
-		console.info(`[${packageName}] Configuring webpack...`);
-
 		const {options} = this;
-		const {patch: createPatch, inject, transform} = options;
+		const {debug, patch: createPatch, inject, transform} = options;
+		if (debug) {
+			console.info(`[${packageName}] Configuring webpack...`);
+		}
 
 		const rules = compiler.options.module.rules;
 
@@ -96,10 +97,11 @@ class DynamicCssWebpackPlugin {
 		}
 		this._hasGenerated = true;
 
-		console.info(`[${packageName}] Generating inject script...`);
-
 		const {options} = this;
-		const {inject, transform, scope} = options;
+		const {debug, inject, transform, scope} = options;
+		if (debug) {
+			console.info(`[${packageName}] Generating inject script...`);
+		}
 
 		const input = await fs.readFile(inject.src, Options.ENCODING);
 		const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
