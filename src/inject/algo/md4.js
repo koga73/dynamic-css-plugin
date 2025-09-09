@@ -1,4 +1,5 @@
 //Modified from: https://github.com/emn178/js-md4
+
 //MIT license
 /**
  * [js-md4]{@link https://github.com/emn178/js-md4}
