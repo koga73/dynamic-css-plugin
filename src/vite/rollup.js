@@ -59,7 +59,6 @@ function DynamicCssRollupPlugin(options) {
 				// Transform code AFTER pre-bundle
 				// NOTE: pre-bundle chunks will not get transformed
 				transform(code, id) {
-					console.log(id);
 					switch (true) {
 						//Apply the patch
 						case patch.test.test(id): {

@@ -30,11 +30,10 @@ function DynamicCssVitePlugin(opts = {}) {
 					config.css.postcss.plugins.push(DynamicCssPostcssPlugin(options));
 
 					//Add esbuild plugin
-					/*
-					config.esbuild ||= {};
-					config.esbuild.plugins ||= [];
-					config.esbuild.plugins.push(DynamicCssEsbuildPlugin(options));
-					*/
+					config.optimizeDeps ||= {};
+					config.optimizeDeps.esbuildOptions ||= {};
+					config.optimizeDeps.esbuildOptions.plugins ||= [];
+					config.optimizeDeps.esbuildOptions.plugins.push(DynamicCssEsbuildPlugin(options));
 				}
 		  };
 }
