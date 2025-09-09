@@ -74,6 +74,8 @@ plugins: [
 
 -   `scope: ""` - Applies a scope to the injected method. Useful if multiple instances are on the same page such as with micro-frontends
 
+-   `debug: false` - Enables debug logging
+
 ### Transform
 
 -   `transform: "[md4:hash:base64:5]"` - The transform template or config object

@@ -45,7 +45,9 @@ function DynamicCssRollupPlugin(options) {
 
 				// Generate the inject script when the build starts
 				async buildStart() {
-					console.info(`[${packageName}] Generating inject script...`);
+					if (options.debug) {
+						console.info(`[${packageName}] Generating inject script...`);
+					}
 
 					const {inject, transform, scope} = options;
 
@@ -62,7 +64,9 @@ function DynamicCssRollupPlugin(options) {
 					switch (true) {
 						//Apply the patch
 						case patch.test.test(id): {
-							console.info(`[${packageName}] Patching '${id}'...`);
+							if (options.debug) {
+								console.info(`[${packageName}] Patching '${id}'...`);
+							}
 
 							const s = new MagicString(code);
 							s.replace(patch.search, patch.replace);
@@ -74,13 +78,17 @@ function DynamicCssRollupPlugin(options) {
 						}
 
 						// Inject into the entry
+						case entryId && entryId === id:
 						case !entryId && options.entryPoint && id === options.entryPoint:
 						// Find the first module that isn't in node_modules and treat it as the entry
 						// https://regex101.com/r/4Jmcli/2
 						case !entryId && !options.entryPoint && /^(?!.*(node_modules)).+(js|jsx|cjs|mjs)$/.test(id): {
-							entryId = id;
-
-							console.info(`[${packageName}] Injecting into entry: '${id}'...`);
+							if (!entryId) {
+								entryId = id;
+							}
+							if (options.debug) {
+								console.info(`[${packageName}] Injecting into entry: '${id}'...`);
+							}
 
 							const s = new MagicString(code);
 							s.prepend(`import "${VIRTUAL.PACKAGE}";\n`);
