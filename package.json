@@ -1,44 +1,74 @@
 {
-	"name": "react-dynamic-css-plugin",
-	"version": "1.3.3",
-	"description": "Webpack plugin to transform dynamic react class names to short prefixed and obfuscated classes at runtime",
-	"main": "index.cjs",
+	"name": "dynamic-css-plugin",
+	"version": "2.0.0",
+	"description": "Vite / Webpack - plugin to transform dynamic css class names on-the-fly",
+	"type": "module",
+	"exports": {
+		"./vite": {
+			"import": "./src/vite/index.js"
+		},
+		"./webpack": {
+			"import": "./src/webpack/index.js"
+		},
+		"./patch/react-dom": {
+			"import": "./src/patch/react-dom.js"
+		}
+	},
 	"scripts": {
+		"prepack": "rimraf src/inject/index_generated.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
-		"webpack",
 		"react",
+		"dom",
+		"webpack",
+		"vite",
+		"rollup",
+		"postcss",
+		"esbuild",
 		"plugin",
 		"css",
 		"style",
 		"class",
 		"classname",
-		"id",
 		"prefix",
 		"obfuscate",
 		"hash",
 		"dynamic",
-		"runtime"
+		"runtime",
+		"bundle"
 	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/koga73/react-dynamic-css-plugin.git"
-	},
-	"bugs": {
-		"url": "https://github.com/koga73/react-dynamic-css-plugin/issues"
-	},
-	"homepage": "https://github.com/koga73/react-dynamic-css-plugin#readme",
 	"author": {
 		"name": "AJ Savino"
 	},
 	"license": "MIT",
 	"dependencies": {
+		"magic-string": "^0.30.18",
 		"string-replace-loader": "3.1.0"
+	},
+	"devDependencies": {
+		"rimraf": "^6.0.1"
 	},
 	"peerDependencies": {
 		"css-loader": ">=6.9.0",
 		"react-dom": "*",
+		"vite": "*",
 		"webpack": "*"
-	}
+	},
+	"peerDependenciesMeta": {
+		"css-loader": {
+			"optional": true
+		},
+		"webpack": {
+			"optional": true
+		},
+		"vite": {
+			"optional": true
+		}
+	},
+	"files": [
+		"README.md",
+		"LICENSE",
+		"src"
+	]
 }
