@@ -4,9 +4,9 @@
 
 **_Patch_. _Inject_. _Transform_.**
 
--   ✔️ React
--   ✔️ Vite
--   ✔️ Webpack
+-   ✔️ [React](https://reactjs.org/)
+-   ✔️ [Vite](https://vitejs.dev/)
+-   ✔️ [Webpack](https://webpack.js.org/)
 
 ## Getting Started
 

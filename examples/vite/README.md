@@ -1,6 +1,6 @@
-# react-dynamic-css-plugin Example (Vite)
+# dynamic-css-plugin Example (Vite)
 
-This example demonstrates how to use **react-dynamic-css-plugin** with a Vite setup.
+This example demonstrates how to use **dynamic-css-plugin** with Vite
 
 ## Install
 

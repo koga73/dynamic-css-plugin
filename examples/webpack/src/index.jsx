@@ -10,7 +10,7 @@ function Main() {
 		<main id="page" className="container">
 			<h1 className="heading">Example - Webpack | Dynamic CSS Plugin</h1>
 			<p className="txt">
-				This simple React application demonstrates the usage <em>react-dynamic-css-plugin</em> with Webpack.
+				This simple React application demonstrates the usage <em>dynamic-css-plugin</em> with Webpack.
 			</p>
 
 			<section id="inspect" className="section">

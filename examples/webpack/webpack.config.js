@@ -3,7 +3,7 @@ import {fileURLToPath} from "url";
 
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import ReactDynamicCssPlugin from "react-dynamic-css-plugin/webpack";
+import DynamicCssPlugin from "dynamic-css-plugin/webpack";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,7 +65,7 @@ export default function webpackConfig(env, argv) {
 				filename: "index.html",
 				template: path.join(__dirname, INPUT_DIR, "index.html")
 			}),
-			new ReactDynamicCssPlugin({
+			new DynamicCssPlugin({
 				transform: "app_[md4:hash:base64:5]"
 			})
 		]

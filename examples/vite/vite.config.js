@@ -1,7 +1,7 @@
 import {defineConfig} from "vite";
 
 import react from "@vitejs/plugin-react";
-import reactDynamicCssPlugin from "react-dynamic-css-plugin/vite";
+import dynamicCssPlugin from "dynamic-css-plugin/vite";
 
 export default defineConfig(function viteConfig() {
 	return {
@@ -16,7 +16,7 @@ export default defineConfig(function viteConfig() {
 		},
 		plugins: [
 			react(),
-			reactDynamicCssPlugin({
+			dynamicCssPlugin({
 				enabled: true,
 				localIdentName: "app_[md4:hash:base64:5]"
 			})

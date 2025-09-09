@@ -1,7 +1,8 @@
 {
 	"name": "dynamic-css-plugin_examples_vite",
 	"version": "1.0.0",
-	"description": "",
+	"private": true,
+	"description": "This example demonstrates how to use **dynamic-css-plugin** with Vite",
 	"author": "AJ Savino",
 	"license": "MIT",
 	"type": "module",
@@ -19,7 +20,7 @@
 	"devDependencies": {
 		"@vitejs/plugin-react": "4.2.1",
 		"express": "5.1.0",
-		"react-dynamic-css-plugin": "file:../../",
+		"dynamic-css-plugin": "file:../../",
 		"rimraf": "5.0.5",
 		"vite": "5.2.8"
 	},

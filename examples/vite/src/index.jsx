@@ -10,7 +10,7 @@ function Main() {
 		<main id="page" className="container">
 			<h1 className="heading">Example - Vite | Dynamic CSS Plugin</h1>
 			<p className="txt">
-				This simple React application demonstrates the usage <em>react-dynamic-css-plugin</em> with Vite.
+				This simple React application demonstrates the usage <em>dynamic-css-plugin</em> with Vite.
 			</p>
 
 			<section id="inspect" className="section">

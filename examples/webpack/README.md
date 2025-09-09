@@ -1,6 +1,6 @@
-# react-dynamic-css-plugin Example (Webpack)
+# dynamic-css-plugin Example (Webpack)
 
-This example demonstrates how to use **react-dynamic-css-plugin** with a Webpack setup.
+This example demonstrates how to use **dynamic-css-plugin** with Webpack
 
 ## Install
 
