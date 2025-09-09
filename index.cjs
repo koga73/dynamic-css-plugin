@@ -4,7 +4,7 @@ const path = require("path");
 const packageJson = require("./package.json");
 const getLocalIdent = require("./scripts/getLocalIdent.cjs");
 
-const SCRIPT_INJECT_SRC = path.resolve(__dirname, "./scripts/inject/setAttributeDynamic.js");
+const SCRIPT_INJECT_SRC = path.resolve(__dirname, "./scripts/inject/index.js");
 const SCRIPT_INJECT = SCRIPT_INJECT_SRC.replace(/\.js$/, "_generated.js");
 
 class _class {
