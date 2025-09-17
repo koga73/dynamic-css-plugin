@@ -2,8 +2,6 @@
 
 `"btn-primary btn-primary-disabled"` ==> `.app_Xscyf.app_LfRuA`
 
-**_Patch_. _Inject_. _Transform_.**
-
 -   ✔️ [React](https://reactjs.org/)
 -   ✔️ [Vite](https://vitejs.dev/)
 -   ✔️ [Webpack](https://webpack.js.org/)
@@ -13,6 +11,14 @@
 -   👌 Prevent conflicts with third party CSS
 -   ❤️‍🔥 Smaller bundle size
 -   💥 Obfuscate class names
+
+## How it works
+
+**_Patch_. _Inject_. _Transform_.**
+
+1.  **_Patch_** into the framework's DOM rendering setAttribute method to intercept class names as they are applied to elements
+2.  **_Inject_** a custom setAttribute method into the bundle that runs the transformation logic
+3.  **_Transform_** class names at run-time and cooresponding CSS at build-time
 
 ### Install
 

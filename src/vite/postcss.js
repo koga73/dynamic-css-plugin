@@ -1,7 +1,7 @@
 import getTransformFunc from "../transform/index.js";
 
 // A PostCSS plugin that applies the transform to class selectors
-function DynamicCssPostcssPlugin(options) {
+function DynamicCssPostcssPlugin(options, result) {
 	const {transform} = options;
 	const {template, ignoreValues} = transform;
 
@@ -21,6 +21,10 @@ function DynamicCssPostcssPlugin(options) {
 						return;
 					}
 					rule.selector = rule.selector.replace(match, `.${transformFunc(className)}`);
+
+					if (!result.didTransform) {
+						result.didTransform = true;
+					}
 				});
 			}
 		}

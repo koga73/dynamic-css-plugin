@@ -100,7 +100,7 @@ class DynamicCssWebpackPlugin {
 		const {options} = this;
 		const {debug, inject, transform, scope} = options;
 		if (debug) {
-			console.info(`[${packageName}] Generating inject script...`);
+			console.info(`[${packageName}] Generating inject script '${inject.file}'...`);
 		}
 
 		const input = await fs.readFile(inject.src, Options.ENCODING);
