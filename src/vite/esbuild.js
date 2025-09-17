@@ -6,7 +6,7 @@ import packageJson from "../../package.json" with {type: "json"};
 const {name: packageName} = packageJson;
 
 // An Esbuild plugin that applies the patch
-function DynamicCssEsbuildPlugin(options) {
+function DynamicCssEsbuildPlugin(options, result) {
 	const {patch: createPatch} = options;
 	const patch = createPatch(options.scope);
 
@@ -25,6 +25,8 @@ function DynamicCssEsbuildPlugin(options) {
 					const source = await fs.readFile(args.path, Options.ENCODING);
 
 					// Apply the patch
+					result.didPatch = true;
+					
 					return {
 						contents: source.replace(patch.search, patch.replace)
 					};

@@ -28,7 +28,7 @@ const VIRTUAL = {
 	}
 };
 
-function DynamicCssRollupPlugin(options) {
+function DynamicCssRollupPlugin(options, result) {
 	const createPatch = options.patch;
 	const patch = createPatch(options.scope);
 
@@ -45,17 +45,18 @@ function DynamicCssRollupPlugin(options) {
 
 				// Generate the inject script when the build starts
 				async buildStart() {
-					if (options.debug) {
-						console.info(`[${packageName}] Generating inject script...`);
-					}
-
 					const {inject, transform, scope} = options;
+					if (options.debug) {
+						console.info(`[${packageName}] Generating inject script '${inject.file}'...`);
+					}
 
 					const input = await fs.readFile(inject.src, Options.ENCODING);
 					const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
 					const output = Tokenize.replace(input, tokens);
 
 					await fs.writeFile(inject.file, output, Options.ENCODING);
+
+					result.didGenerate = true;
 				},
 
 				// Transform code AFTER pre-bundle
@@ -71,6 +72,8 @@ function DynamicCssRollupPlugin(options) {
 							const s = new MagicString(code);
 							s.replace(patch.search, patch.replace);
 
+							result.didPatch = true;
+
 							return {
 								code: s.toString(),
 								map: s.generateMap()
@@ -79,10 +82,10 @@ function DynamicCssRollupPlugin(options) {
 
 						// Inject into the entry
 						case entryId && entryId === id:
-						case !entryId && options.entryPoint && id === options.entryPoint:
+						case !entryId && options.entryPoint && options.entryPoint instanceof RegExp ? options.entryPoint.test(id) : options.entryPoint === id:
 						// Find the first module that isn't in node_modules and treat it as the entry
 						// https://regex101.com/r/4Jmcli/2
-						case !entryId && !options.entryPoint && /^(?!.*(node_modules)).+(js|jsx|cjs|mjs)$/.test(id): {
+						case !entryId && !options.entryPoint && path.isAbsolute(id) && /^(?!.*(node_modules)).+(js|jsx|cjs|mjs)$/.test(id): {
 							if (!entryId) {
 								entryId = id;
 							}
@@ -92,6 +95,8 @@ function DynamicCssRollupPlugin(options) {
 
 							const s = new MagicString(code);
 							s.prepend(`import "${VIRTUAL.PACKAGE}";\n`);
+
+							result.didInject = true;
 
 							return {
 								code: s.toString(),
