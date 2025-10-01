@@ -2,7 +2,7 @@ import {promises as fs} from "fs";
 
 import Options from "../options.js";
 import Tokenize from "../tokenize.js";
-import getLocalIdent from "./getLocalIdent.js";
+import getLocalIdent from "./get-local-ident.js";
 
 import packageJson from "../../package.json" with {type: "json"};
 const {name: packageName, version: packageVersion} = packageJson;
@@ -24,12 +24,11 @@ class DynamicCssWebpackPlugin {
 	apply(compiler) {
 		const {options, plugin} = this;
 		const {enabled} = options;
-		if (enabled !== true) {
-			return;
-		}
 		const {name} = plugin;
-
-		compiler.hooks.afterEnvironment.tap(name, () => this._afterEnvironment(compiler));
+		
+		if (enabled === true) {
+			compiler.hooks.afterEnvironment.tap(name, () => this._afterEnvironment(compiler));
+		}
 		compiler.hooks.beforeCompile.tapPromise(name, () => this._beforeCompile(compiler));
 	}
 
@@ -90,7 +89,7 @@ class DynamicCssWebpackPlugin {
 		}
 	}
 
-	// Generate the inject script
+	// Always generate the inject script as it could be used in vanilla js
 	async _beforeCompile(compiler) {
 		if (this._hasGenerated) {
 			return;
@@ -98,13 +97,13 @@ class DynamicCssWebpackPlugin {
 		this._hasGenerated = true;
 
 		const {options} = this;
-		const {debug, inject, transform, scope} = options;
+		const {debug, enabled, scope, inject, transform} = options;
 		if (debug) {
 			console.info(`[${packageName}] Generating inject script '${inject.file}'...`);
 		}
 
 		const input = await fs.readFile(inject.src, Options.ENCODING);
-		const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
+		const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope, enabled});
 		const output = Tokenize.replace(input, tokens);
 
 		await fs.writeFile(inject.file, output, Options.ENCODING);
