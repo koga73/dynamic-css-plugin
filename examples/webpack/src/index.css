@@ -9,6 +9,9 @@ body {
 	color: #111;
 	background: #fff;
 }
+body.theme-light {
+	background: #f0f0f0;
+}
 
 .container {
 	box-sizing: border-box;

@@ -17,16 +17,15 @@ function DynamicCssEsbuildPlugin(options, result) {
 				{
 					filter: patch.test
 				},
-				async (args) => {
-					if (options.debug){
+				async function onLoadPatch(args) {
+					if (options.debug) {
 						console.info(`[${packageName}] Patching '${args.path}'...`);
 					}
-
 					const source = await fs.readFile(args.path, Options.ENCODING);
 
 					// Apply the patch
 					result.didPatch = true;
-					
+
 					return {
 						contents: source.replace(patch.search, patch.replace)
 					};

@@ -1,10 +1,17 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {createRoot} from "react-dom/client";
+
+import DynamicCss from "dynamic-css-plugin";
 
 import "./index.css";
 
 function Main() {
 	const [stateCount, setStateCount] = useState(0);
+
+	useEffect(function componentDidMount() {
+		// Add a class to the body to demonstrate usage outside of React components
+		document.body.classList.add(DynamicCss("theme-light"));
+	});
 
 	return (
 		<main id="page" className="container">
