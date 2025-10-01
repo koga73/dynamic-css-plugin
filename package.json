@@ -1,6 +1,6 @@
 {
 	"name": "dynamic-css-plugin",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"description": "Vite / Webpack - plugin to transform dynamic css class names on-the-fly",
 	"type": "module",
 	"exports": {
