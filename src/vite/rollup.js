@@ -17,9 +17,9 @@ const __dirname = path.dirname(__filename);
 const VIRTUAL = {
 	PACKAGE: `virtual:${packageName}`,
 	SET_ATTRIBUTE_DYNAMIC: {
-		name: `virtual:${packageName}/setAttributeDynamic.js`,
-		replace: `./setAttributeDynamic.js`,
-		src: path.resolve(__dirname, "../inject/setAttributeDynamic.js")
+		name: `virtual:${packageName}/set-attribute-dynamic.js`,
+		replace: `./set-attribute-dynamic.js`,
+		src: path.resolve(__dirname, "../inject/set-attribute-dynamic.js")
 	},
 	MD4: {
 		name: `virtual:${packageName}/algo/md4.js`,
@@ -36,28 +36,28 @@ function DynamicCssRollupPlugin(options, result) {
 
 	const plugin = {
 		name: packageName,
-		version: packageVersion
+		version: packageVersion,
+
+		// Always generate the inject script as it could be used in vanilla js
+		async buildStart() {
+			const {inject, transform, scope, enabled} = options;
+			if (options.debug) {
+				console.info(`[${packageName}] Generating inject script '${inject.file}'...`);
+			}
+
+			const input = await fs.readFile(inject.src, Options.ENCODING);
+			const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope, enabled});
+			const output = Tokenize.replace(input, tokens);
+
+			await fs.writeFile(inject.file, output, Options.ENCODING);
+
+			result.didGenerate = true;
+		}
 	};
 	return options.enabled !== true
 		? plugin
 		: {
 				...plugin,
-
-				// Generate the inject script when the build starts
-				async buildStart() {
-					const {inject, transform, scope} = options;
-					if (options.debug) {
-						console.info(`[${packageName}] Generating inject script '${inject.file}'...`);
-					}
-
-					const input = await fs.readFile(inject.src, Options.ENCODING);
-					const tokens = Tokenize.compute({packageName, packageVersion}, {...transform, scope});
-					const output = Tokenize.replace(input, tokens);
-
-					await fs.writeFile(inject.file, output, Options.ENCODING);
-
-					result.didGenerate = true;
-				},
 
 				// Transform code AFTER pre-bundle
 				// NOTE: pre-bundle chunks will not get transformed

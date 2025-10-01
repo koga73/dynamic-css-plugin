@@ -1,10 +1,11 @@
 import getTransformFunc from "./transform/index.js";
 
 class Tokenize {
-	static compute({packageName, packageVersion}, {template, attributes, ignoreTags, ignoreValues, scope}) {
+	static compute({packageName, packageVersion}, {enabled, scope, template, attributes, ignoreTags, ignoreValues}) {
 		return {
 			__PACKAGE_NAME__: packageName,
 			__PACKAGE_VERSION__: packageVersion,
+			__ENABLED__: enabled,
 			__TEMPLATE__: template,
 			__ATTRIBUTES__: attributes,
 			__IGNORE_TAGS__: ignoreTags,

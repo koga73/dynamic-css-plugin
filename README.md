@@ -140,3 +140,17 @@ plugins: [
 -   **css-** which is the [emotion](https://emotion.sh/) default
 -   **sc-** which is the [styled-components](https://styled-components.com) default
 -   **icon-** which is the the standard for icon classes
+
+## Limitations
+
+Since we are only patching calls to "setAttribute" inside react-dom that means if a class is applied a different way such as with vanilla JS or using classList the transform will not apply. This is largely ok since these patterns don’t necessarily follow the "react way of doing things". However if you do need to support these patterns you can use the injected method directly.
+
+For example:
+
+```js
+import DynamicCss from "dynamic-css-plugin";
+
+document.body.classList.add(DynamicCss("theme-light"));
+```
+
+To avoid issues, the plugin supports options to ignore specific tags and values. Additionally the plugin does not transform ids, this is done purposely so that tests and analytics can still reliably target elements.

@@ -15,6 +15,7 @@ export default defineConfig(function viteConfig() {
 		plugins: [
 			react(),
 			dynamicCssPlugin({
+				enabled: true,
 				debug: true,
 				transform: "app_[md4:hash:base64:5]"
 			})
