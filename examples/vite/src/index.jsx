@@ -4,6 +4,7 @@ import {createRoot} from "react-dom/client";
 import DynamicCss from "dynamic-css-plugin";
 
 import "./index.css";
+import "./test.notransform.css";
 
 function Main() {
 	const [stateCount, setStateCount] = useState(0);

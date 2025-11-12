@@ -1,7 +1,7 @@
 import getTransformFunc from "./transform/index.js";
 
 class Tokenize {
-	static compute({packageName, packageVersion}, {enabled, scope, template, attributes, ignoreTags, ignoreValues}) {
+	static compute({packageName, packageVersion}, {enabled, scope, template, attributes, ignoreTags, ignoreValues, ignoreFiles}) {
 		return {
 			__PACKAGE_NAME__: packageName,
 			__PACKAGE_VERSION__: packageVersion,
@@ -10,6 +10,7 @@ class Tokenize {
 			__ATTRIBUTES__: attributes,
 			__IGNORE_TAGS__: ignoreTags,
 			__IGNORE_VALUES__: ignoreValues,
+			__IGNORE_FILES__: ignoreFiles,
 			__SCOPE__: scope,
 			__TRANSFORM_FUNC__: `(${getTransformFunc.toString()})("${template}")`
 		};
