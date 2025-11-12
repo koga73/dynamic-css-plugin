@@ -17,7 +17,8 @@ class Options {
 			template: "[md4:hash:base64:5]",
 			attributes: /^(class)$/,
 			ignoreTags: /(path)/i,
-			ignoreValues: /^(css|sc|icon)-/i
+			ignoreValues: /^(css|sc|icon)-/i,
+			ignoreFiles: /\.notransform\.(css|scss)$/i
 		},
 		inject: {
 			entryPoint: undefined,

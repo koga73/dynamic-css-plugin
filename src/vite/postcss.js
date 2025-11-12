@@ -3,13 +3,17 @@ import getTransformFunc from "../transform/index.js";
 // A PostCSS plugin that applies the transform to class selectors
 function DynamicCssPostcssPlugin(options, result) {
 	const {transform} = options;
-	const {template, ignoreValues} = transform;
+	const {template, ignoreValues, ignoreFiles} = transform;
 
 	const transformFunc = getTransformFunc(template);
 
 	return {
 		postcssPlugin: "DynamicCssPostcssPlugin",
 		Rule(rule) {
+			// Check if we should ignore this file
+			if (ignoreFiles.test(rule.source.input.file)) {
+				return;
+			}
 			const {selector} = rule;
 
 			// Find classes in selector

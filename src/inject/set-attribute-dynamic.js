@@ -5,11 +5,12 @@ const _SINGLETON_ENFORCER = Symbol(_METHOD_NAME);
 let _singleton = null;
 
 class SetAttributeDynamic {
-	static initialize({packageName, packageVersion, scope, attributes, ignoreTags, ignoreValues, transformFunc}) {
+	static initialize({packageName, packageVersion, scope, attributes, ignoreTags, ignoreValues, ignoreFiles, transformFunc}) {
 		const instance = new SetAttributeDynamic(_SINGLETON_ENFORCER, {
 			attributes,
 			ignoreTags,
 			ignoreValues,
+			ignoreFiles,
 			transformFunc
 		});
 

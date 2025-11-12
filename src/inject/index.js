@@ -12,6 +12,7 @@ if (__ENABLED__ === true) {
 		attributes: "__ATTRIBUTES__",
 		ignoreTags: "__IGNORE_TAGS__",
 		ignoreValues: "__IGNORE_VALUES__",
+		ignoreFiles: "__IGNORE_FILES__",
 		scope: "__SCOPE__",
 		transformFunc: __TRANSFORM_FUNC__
 	});

@@ -101,6 +101,8 @@ plugins: [
 
     -   `transform.ignoreValues: /^(css|sc|icon)-/i` - Regex for HTML attribute values to ignore
 
+    -   `transform.ignoreFiles: /\.notransform\.(css|scss)$/i` - Regex for files to ignore
+
 ### Inject
 
 -   `inject: {}` - The injection config
