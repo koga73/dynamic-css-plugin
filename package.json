@@ -1,6 +1,6 @@
 {
 	"name": "dynamic-css-plugin",
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"description": "Vite / Webpack - plugin to transform dynamic css class names on-the-fly",
 	"type": "module",
 	"exports": {
@@ -16,6 +16,9 @@
 		"./patch/react-dom": {
 			"import": "./src/patch/react-dom.js"
 		}
+	},
+	"bin": {
+		"dynamic-css-plugin": "helpers/cli-generate.js"
 	},
 	"scripts": {
 		"prepack": "rimraf src/inject/index_generated.js",
